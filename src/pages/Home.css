@@ -14,7 +14,8 @@
   width: 100%;
   max-width: 1000px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  /* MELHORIA: minmax com valor menor para mais flexibilidade em telas estreitas */
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 15px;
   margin-bottom: 40px;
   padding-bottom: 40px;
@@ -23,13 +24,14 @@
 
 .stat-card {
   background-color: #fff;
-  padding: 20px;
+  padding: 20px 15px; /* Padding ajustado */
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-height: 120px; /* Garante altura mínima consistente */
 }
 
 .stat-card.valor {
@@ -37,11 +39,14 @@
 }
 
 .stat-number {
-  font-size: 2.5rem;
+  /* NOVIDADE: Fonte fluida com clamp() */
+  /* Tamanho mínimo de 1.8rem, preferencial de 5vw, máximo de 2.5rem */
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 700;
   color: #1e3a5f;
   margin-bottom: 5px;
   line-height: 1.1;
+  word-break: break-all; /* Garante que números muito grandes quebrem a linha */
 }
 
 .stat-label {
@@ -49,7 +54,7 @@
   color: #667085;
 }
 
-/* === SEÇÃO DE NAVEGAÇÃO === */
+/* === SEÇÃO DE NAVEGAÇÃO (sem mudanças) === */
 .main-nav {
   display: flex;
   flex-direction: column;
@@ -57,41 +62,11 @@
   width: 100%;
   max-width: 400px;
 }
-
-.main-nav h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 15px;
-  margin-top: 0;
-}
-
-.nav-button {
-  display: block;
-  padding: 18px 25px;
-  background-color: #005a9c;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.nav-button:hover {
-  background-color: #004170;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.nav-button.special-action {
-  background-color: #28a745;
-  margin-top: 10px;
-}
-.nav-button.special-action:hover {
-  background-color: #218838;
-}
-
+.main-nav h2 { font-size: 1.5rem; color: #333; margin-bottom: 15px; margin-top: 0; }
+.nav-button { display: block; padding: 18px 25px; background-color: #005a9c; color: white; text-decoration: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.2s; }
+.nav-button:hover { background-color: #004170; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+.nav-button.special-action { background-color: #28a745; margin-top: 10px; }
+.nav-button.special-action:hover { background-color: #218838; }
 
 /* ======================================================= */
 /* === MEDIA QUERIES PARA RESPONSIVIDADE === */
@@ -100,25 +75,16 @@
 /* Para celulares (até 480px) */
 @media (max-width: 480px) {
   .dashboard-stats {
-    gap: 10px; /* Espaçamento menor entre os cards */
-    margin-bottom: 30px;
-    padding-bottom: 30px;
+    gap: 10px;
   }
   
   .stat-card {
-    padding: 15px;
-  }
-
-  .stat-number {
-    font-size: 2rem; /* Fonte menor para os números */
-  }
-
-  .stat-label {
-    font-size: 0.85rem;
+    padding: 15px 10px;
+    min-height: 110px;
   }
 
   .nav-button {
-    padding: 15px 20px; /* Botões de navegação menores */
+    padding: 15px 20px;
     font-size: 1rem;
   }
 }
