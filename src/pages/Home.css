@@ -1,35 +1,37 @@
 /* src/pages/Home.css */
 
+/* O container principal da Home */
 .home-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 20px;
-  text-align: center;
+  gap: 2rem;
 }
 
+/* === SEÇÃO DO DASHBOARD === */
 .dashboard-stats {
   width: 100%;
   display: grid;
-  /* MELHORIA FINAL: minmax ainda menor para caber em telas super estreitas */
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  margin-bottom: 40px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid #e0e0e0;
+  /* Cria colunas flexíveis com um tamanho mínimo, permitindo que se ajustem */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
 }
 
 .stat-card {
-  background-color: #fff;
-  padding: 15px 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  background-color: var(--cor-superficie);
+  padding: 1.5rem;
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-card);
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 110px;
+  min-height: 120px;
+  transition: var(--transicao-rapida);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card.valor {
@@ -37,24 +39,49 @@
 }
 
 .stat-number {
-  /* Fonte fluida é a chave para evitar cortes */
-  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-size: clamp(2rem, 5vw, 2.75rem);
   font-weight: 700;
-  color: #1e3a5f;
-  margin-bottom: 5px;
+  color: var(--cor-secundaria);
+  margin-bottom: 0.5rem;
   line-height: 1.1;
-  word-wrap: break-word; /* Garante a quebra de palavras/números longos */
+  word-wrap: break-word;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: #667085;
+  font-size: 0.9rem;
+  color: var(--cor-texto-secundario);
 }
 
-/* ... (seção .main-nav sem mudanças) ... */
-.main-nav { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 400px; }
-.main-nav h2 { font-size: 1.5rem; color: #333; margin-bottom: 15px; margin-top: 0; }
-.nav-button { display: block; padding: 18px 25px; background-color: #005a9c; color: white; text-decoration: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; text-align: center; transition: background-color 0.3s, transform 0.2s; }
-.nav-button:hover { background-color: #004170; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
-.nav-button.special-action { background-color: #28a745; margin-top: 10px; }
-.nav-button.special-action:hover { background-color: #218838; }
+/* === SEÇÃO DE NAVEGAÇÃO RÁPIDA (BOTÕES) === */
+.main-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.nav-button {
+  padding: 1.25rem;
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-branco);
+  text-decoration: none;
+  border-radius: var(--raio-borda);
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  transition: var(--transicao-rapida);
+  box-shadow: var(--sombra-card);
+}
+
+.nav-button:hover {
+  background-color: var(--cor-primaria-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.nav-button.special-action {
+  background-color: var(--cor-sucesso);
+}
+.nav-button.special-action:hover {
+  background-color: var(--cor-sucesso-hover);
+}

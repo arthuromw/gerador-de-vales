@@ -1,4 +1,3 @@
-// src/components/Vale.js
 import React from 'react';
 
 // Este componente recebe os dados do vale via props

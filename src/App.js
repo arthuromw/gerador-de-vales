@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 
 // Componentes e Páginas
-import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import SideBar from './components/SideBar'; // Nome do arquivo atualizado
 import Home from './pages/Home';
 import PaginaCadastro from './pages/PaginaCadastro';
 import PaginaGerarVale from './pages/PaginaGerarVale';
@@ -20,7 +21,7 @@ const getInitialData = () => {
     { id: 2, nome: 'Maria Souza Cargas', cnpj: '22.222.222/0001-22', placa: 'BBB-2222' },
     { id: 3, nome: 'Pedro Rocha Fretes', cnpj: '33.333.333/0001-33', placa: 'CCC-3333' },
   ];
-  const hojeString = new Date().toISOString().slice(0, 10);
+  const hojeString = "2025-08-31";
   const valesIniciais = [
     { id: 1, nome: 'João da Silva Transportes', cnpj: '11.111.111/0001-11', placa: 'AAA-1111', valor: '150.00', qtdCacambas: 1, observacoes: 'Adiantamento semanal', data: hojeString, idVale: 1724450000001, codigo: 'VALE-25-00001', status: 'pago' },
     { id: 2, nome: 'Maria Souza Cargas', cnpj: '22.222.222/0001-22', placa: 'BBB-2222', valor: '320.00', qtdCacambas: 2, observacoes: '', data: '2025-08-15', idVale: 1724450000002, codigo: 'VALE-25-00002', status: 'pendente' },
@@ -30,23 +31,26 @@ const getInitialData = () => {
 
 function App() {
   const [pessoas, setPessoas] = useState(() => {
-    const salvo = localStorage.getItem('pessoas');
-    return salvo ? JSON.parse(salvo) : getInitialData().pessoasIniciais;
+    try { const salvo = localStorage.getItem('pessoas'); if (salvo) { const p = JSON.parse(salvo); if (Array.isArray(p)) return p; } } catch (e) { console.error("Erro ao carregar pessoas:", e); }
+    return getInitialData().pessoasIniciais;
   });
   const [vales, setVales] = useState(() => {
-    const salvo = localStorage.getItem('valesGerados');
-    return salvo ? JSON.parse(salvo) : getInitialData().valesIniciais;
+    try { const salvo = localStorage.getItem('valesGerados'); if (salvo) { const v = JSON.parse(salvo); if (Array.isArray(v)) return v; } } catch (e) { console.error("Erro ao carregar vales:", e); }
+    return getInitialData().valesIniciais;
   });
   const [contadorVales, setContadorVales] = useState(() => {
     const salvo = localStorage.getItem('contadorVales');
     return salvo ? parseInt(salvo) : getInitialData().valesIniciais.length;
   });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => { localStorage.setItem('pessoas', JSON.stringify(pessoas)); }, [pessoas]);
   useEffect(() => {
     localStorage.setItem('valesGerados', JSON.stringify(vales));
     localStorage.setItem('contadorVales', contadorVales.toString());
   }, [vales, contadorVales]);
+  useEffect(() => { setIsMenuOpen(false); }, [location.pathname]);
 
   const dashboardStats = useMemo(() => {
     const hoje = new Date().toISOString().slice(0, 10);
@@ -56,12 +60,9 @@ function App() {
     const totalValorHoje = valesHoje.reduce((acc, v) => acc + parseFloat(v.valor), 0);
     const totalValorMes = valesMes.reduce((acc, v) => acc + parseFloat(v.valor), 0);
     return {
-      valesGeradosHoje: valesHoje.length,
-      valesGeradosMes: valesMes.length,
-      totalVales: vales.length,
-      totalPessoas: pessoas.length,
-      valorTotalHoje: totalValorHoje,
-      valorTotalMes: totalValorMes,
+      valesGeradosHoje: valesHoje.length, valesGeradosMes: valesMes.length,
+      totalVales: vales.length, totalPessoas: pessoas.length,
+      valorTotalHoje: totalValorHoje, valorTotalMes: totalValorMes,
       totalPendentes: vales.filter(v => v.status === 'pendente').length,
       totalPagos: vales.filter(v => v.status === 'pago').length,
     };
@@ -71,7 +72,6 @@ function App() {
     setPessoas(prev => [...prev, novaPessoa]);
     toast.success(`Pessoa "${novaPessoa.nome}" cadastrada!`);
   };
-
   const handleGerarVale = (dadosDoVale) => {
     const novoContador = contadorVales + 1;
     const ano = new Date().getFullYear().toString().slice(-2);
@@ -81,29 +81,23 @@ function App() {
     setContadorVales(novoContador);
     toast.success(`Vale ${codigoUnico} gerado com sucesso!`);
   };
-
   const handleConfirmarPagamento = (idVale) => {
     setVales(vales.map(vale => vale.idVale === idVale ? { ...vale, status: 'pago' } : vale));
     toast.success('Vale marcado como pago!');
   };
-
   const handleDeletarVale = (idVale) => {
-    if (window.confirm("Tem certeza que deseja deletar este vale? Esta ação não pode ser desfeita.")) {
-      setVales(vales.filter(vale => vale.idVale !== idVale));
-      toast.success('Vale deletado com sucesso.');
-    }
+    setVales(vales.filter(vale => vale.idVale !== idVale));
+    toast.success('Vale deletado com sucesso.');
   };
-  
   const handleDeletarTodosOsVales = () => {
-    if (window.confirm("ATENÇÃO!\n\nDeletar TODOS os vales permanentemente do armazenamento?")) {
+    if (window.confirm("ATENÇÃO! Deletar TODOS os vales permanentemente?")) {
       localStorage.removeItem('valesGerados');
       localStorage.removeItem('contadorVales');
       setVales([]);
       setContadorVales(0);
-      toast.success("Todos os vales foram deletados com sucesso.");
+      toast.success("Todos os vales foram deletados.");
     }
   };
-
   const handleEditarVale = (idVale, dadosAtualizados) => {
     setVales(vales.map(vale => vale.idVale === idVale ? { ...vale, ...dadosAtualizados } : vale));
     toast.success('Vale atualizado com sucesso!');
@@ -112,8 +106,9 @@ function App() {
   return (
     <div className="App-container">
       <Toaster position="top-right" reverseOrder={false} />
-      <Sidebar />
+      <SideBar isOpen={isMenuOpen} />
       <div className="content-wrap">
+        <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home stats={dashboardStats} />} />
@@ -131,3 +126,4 @@ function App() {
 }
 
 export default App;
+

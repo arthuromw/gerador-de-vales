@@ -1,10 +1,12 @@
-// src/components/Sidebar.js
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = () => {
+const SideBar = ({ isOpen }) => {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-header">
+        <h2>Gerador de Vales</h2>
+      </div>
       <nav className="sidebar-nav">
         <NavLink to="/" end className="nav-link">Dashboard</NavLink>
         <NavLink to="/gerar" className="nav-link">Gerar Vale</NavLink>
@@ -16,4 +18,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar; 
+export default SideBar;

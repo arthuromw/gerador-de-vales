@@ -5,8 +5,12 @@ import ListaVales from '../components/ListaVales';
 const PaginaGerarVale = ({ pessoas, vales, onGerarVale }) => {
   const [pessoaSelecionadaId, setPessoaSelecionadaId] = useState('');
   const pessoaSelecionada = pessoas.find(p => p.id === parseInt(pessoaSelecionadaId));
-  const valesDaPessoaSelecionada = vales.filter(v => v.id === parseInt(pessoaSelecionadaId)).sort((a, b) => b.idVale - a.idVale);
+  const valesDaPessoaSelecionada = vales
+    .filter(v => v.id === parseInt(pessoaSelecionadaId))
+    .sort((a, b) => b.idVale - a.idVale);
+
   return (
+    // Usa o layout de container para criar as colunas
     <div className="container">
       <div className="coluna">
         <div className="card">
@@ -16,7 +20,11 @@ const PaginaGerarVale = ({ pessoas, vales, onGerarVale }) => {
             {pessoas.map((pessoa) => (<option key={pessoa.id} value={pessoa.id}>{pessoa.nome}</option>))}
           </select>
         </div>
-        <FormularioVale pessoaSelecionada={pessoaSelecionada} onGerarVale={onGerarVale} />
+
+        {/* O formulário só aparece se uma pessoa for selecionada */}
+        {pessoaSelecionada && (
+          <FormularioVale pessoaSelecionada={pessoaSelecionada} onGerarVale={onGerarVale} />
+        )}
       </div>
       <div className="coluna">
         {pessoaSelecionada && (
@@ -29,4 +37,5 @@ const PaginaGerarVale = ({ pessoas, vales, onGerarVale }) => {
     </div>
   );
 };
+
 export default PaginaGerarVale;

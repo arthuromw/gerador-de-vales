@@ -1,44 +1,35 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const getPageTitle = (pathname) => {
   const parts = pathname.split('/').filter(Boolean);
-  if (parts.length === 0) return { title: 'Dashboard', breadcrumb: 'Início' };
+  if (parts.length === 0) return { title: 'Dashboard' };
   
   const page = parts[0];
   switch (page) {
-    case 'gerar':
-      return { title: 'Gerar Vale', breadcrumb: 'Início > Gerar Vale' };
-    case 'consultar':
-      return { title: 'Consultar Vales', breadcrumb: 'Início > Consultar' };
-    case 'cadastrar':
-      return { title: 'Gerenciar Pessoas', breadcrumb: 'Início > Cadastrar' };
-    case 'fechamento-dia':
-      return { title: 'Fechamento do Dia', breadcrumb: 'Início > Fechamento' };
-    case 'editar-vale':
-      return { title: 'Editar Vale', breadcrumb: 'Início > Consultar > Editar' };
-    default:
-      return { title: 'Sistema de Vales', breadcrumb: 'Início' };
+    case 'gerar': return { title: 'Gerar Vale' };
+    case 'consultar': return { title: 'Consultar Vales' };
+    case 'cadastrar': return { title: 'Gerenciar Pessoas' };
+    case 'fechamento-dia': return { title: 'Fechamento do Dia' };
+    case 'editar-vale': return { title: 'Editar Vale' };
+    default: return { title: 'Sistema de Vales' };
   }
 };
 
-const Header = () => {
+const Header = ({ onMenuToggle }) => {
   const location = useLocation();
-  const { title, breadcrumb } = getPageTitle(location.pathname);
+  const { title } = getPageTitle(location.pathname);
 
-  // Atualiza o título da aba do navegador
   React.useEffect(() => {
     document.title = title;
   }, [title]);
 
   return (
     <header className="App-header">
-      <div className="header-content">
-        <Link to="/" className="header-title-link">
-          <h1>Sistema Gerador de Vales</h1>
-        </Link>
-        <p className="breadcrumb">{breadcrumb}</p>
-      </div>
+      <button className="mobile-menu-button" onClick={onMenuToggle} aria-label="Abrir menu">
+        ☰
+      </button>
+      <h1 className="header-title">{title}</h1>
     </header>
   );
 };
