@@ -30,12 +30,16 @@
   /* Estilos */
   --raio-borda: 0.375rem;
   --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --transicao-rapida: all 0.2s ease-in-out;
+  --transicao-rapida: all 0.3s ease-in-out;
 }
 
 /* ======================================================= */
 /* === ESTILOS BASE (DESKTOP-FIRST) === */
 /* ======================================================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--cor-fundo);
@@ -46,6 +50,7 @@ body {
 
 .App-container {
   display: flex;
+  min-height: 100vh;
 }
 
 /* --- Sidebar (Padrão: Visível no Desktop) --- */
@@ -57,8 +62,9 @@ body {
   position: sticky;
   top: 0;
   padding: 1.5rem;
-  box-sizing: border-box;
   flex-shrink: 0;
+  transition: var(--transicao-rapida);
+  z-index: 1000;
 }
 .sidebar-header {
   text-align: center;
@@ -80,7 +86,7 @@ body {
   padding: 0.75rem 1rem;
   border-radius: var(--raio-borda);
   font-weight: 500;
-  transition: var(--transicao-rapida);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
@@ -104,10 +110,10 @@ body {
 .App-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* Alterado para space-between */
   gap: 1rem;
   margin-bottom: 1.5rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem; /* Ajustado padding */
   background-color: var(--cor-superficie);
   border-radius: var(--raio-borda);
   box-shadow: var(--sombra-card);
@@ -118,13 +124,14 @@ body {
   color: var(--cor-secundaria);
 }
 .mobile-menu-button {
-  display: none; /* Escondido no desktop por padrão */
+  display: none;
 }
 
 /* LAYOUT DE COLUNAS PARA DESKTOP */
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  /* CORREÇÃO: minmax com valor menor para melhor encaixe em telas de tablet */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
 }
 .coluna {
@@ -139,9 +146,9 @@ body {
 .form-group { margin-bottom: 1rem; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
 input, select, textarea {
-  padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: var(--raio-borda); font-size: 1rem; width: 100%; box-sizing: border-box; transition: var(--transicao-rapida);
+  padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); border-radius: var(--raio-borda); font-size: 1rem; width: 100%; transition: var(--transicao-rapida);
 }
-input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--cor-primaria); box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--cor-primaria); box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
 textarea { resize: vertical; min-height: 80px; }
 
 /* === SISTEMA DE BOTÕES === */
@@ -149,7 +156,10 @@ textarea { resize: vertical; min-height: 80px; }
   width: auto; padding: 0.75rem 1.25rem; color: var(--cor-texto-branco);
   border: none; border-radius: var(--raio-borda); font-size: 1rem; font-weight: bold;
   cursor: pointer; transition: var(--transicao-rapida); text-decoration: none;
-  display: inline-block; text-align: center;
+  display: inline-flex; /* Alterado para inline-flex para melhor alinhamento */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -168,18 +178,18 @@ textarea { resize: vertical; min-height: 80px; }
 .btn-full { width: 100%; }
 
 /* === TABELA DE CONSULTA === */
-.filtros-container { display: flex; flex-direction: row; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+.filtros-container { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.filtros-container input, .filtros-container select { max-width: 300px; } /* Limita a largura no desktop */
+
 .table-container { margin-top: 1.5rem; width: 100%; overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
-table th, table td { padding: 0.75rem 1rem; border: 1px solid var(--cor-borda); text-align: left; white-space: nowrap; }
+table th, table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--cor-borda); text-align: left; white-space: nowrap; }
 table thead { background-color: #f8f9fa; }
-table th { font-weight: 600; }
-.status { padding: 0.25rem 0.5rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+table th { font-weight: 600; color: var(--cor-texto-secundario); font-size: 0.875rem; text-transform: uppercase; }
+.status { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
 .status-pendente { background-color: #fff3cd; color: #664d03; }
 .status-pago { background-color: #d1e7dd; color: #0f5132; }
 .acoes-cell { display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; }
-.acoes-administrativas { margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid var(--cor-borda); display: flex; justify-content: flex-end; }
-.aviso { text-align: center; color: var(--cor-texto-secundario); font-style: italic; padding: 1.5rem; }
 
 /* === PAGINAÇÃO E ESTADO VAZIO === */
 .empty-state { text-align: center; padding: 2rem 1.5rem; background-color: var(--cor-superficie); border-radius: var(--raio-borda); border: 2px dashed var(--cor-borda); }
@@ -189,35 +199,109 @@ table th { font-weight: 600; }
 .pagination-button:hover:not(:disabled) { background-color: #e9ecef; }
 .pagination-button.active { background-color: var(--cor-primaria); color: #fff; border-color: var(--cor-primaria); }
 .pagination-button:disabled { color: var(--cor-texto-secundario); cursor: not-allowed; background-color: var(--cor-fundo); }
+.aviso { text-align: center; color: var(--cor-texto-secundario); font-style: italic; padding: 1.5rem; }
 
 /* ======================================================= */
 /* === RESPONSIVIDADE (TABLET E MOBILE) === */
 /* ======================================================= */
 @media (max-width: 1024px) {
-  .App-container { flex-direction: column; position: relative; }
   .sidebar {
     position: fixed;
     transform: translateX(-100%);
+    box-shadow: var(--sombra-card);
   }
-  .sidebar.open { transform: translateX(0); }
-  .content-wrap { width: 100%; padding: 1rem; box-sizing: border-box; }
-  .mobile-menu-button { 
-    display: block; 
-    background: none; 
-    border: none; 
-    font-size: 2rem; 
-    line-height: 1; 
-    color: var(--cor-secundaria); 
-    cursor: pointer; 
-    padding: 0 10px;
+  .sidebar.open {
+    transform: translateX(0);
   }
-  .App-header { justify-content: flex-start; } /* Alinha o título à esquerda no mobile */
-  .header-title { font-size: 1.25rem; }
-  .container { grid-template-columns: 1fr; } /* Força uma única coluna */
-  .filtros-container { flex-direction: column; }
+  .content-wrap {
+    width: 100%;
+    padding: 1rem;
+    transition: var(--transicao-rapida);
+  }
+  /* MELHORIA: Adiciona um overlay para focar no menu quando aberto */
+  .overlay {
+    display: none;
+  }
+  .overlay.active {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .mobile-menu-button {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--cor-secundaria);
+    cursor: pointer;
+    z-index: 1001; /* Garante que o botão fique acima do conteúdo */
+  }
+  .header-title {
+    font-size: 1.25rem;
+  }
+  .container {
+    grid-template-columns: 1fr;
+  }
+  .filtros-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filtros-container input, .filtros-container select {
+    max-width: none; /* Permite que os filtros ocupem 100% da largura */
+    width: 100%;
+  }
+
+  /* MELHORIA PRINCIPAL: Tabela totalmente responsiva */
+  .table-container {
+    overflow-x: hidden; /* Remove o scroll horizontal */
+  }
+  table thead {
+    display: none; /* Esconde o cabeçalho original */
+  }
+  table, table tbody, table tr, table td {
+    display: block;
+    width: 100%;
+  }
+  table tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    padding: 1rem;
+  }
+  table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border: none;
+    white-space: normal; /* Permite que o texto quebre a linha */
+  }
+  table td::before {
+    content: attr(data-label); /* Usa o data-label como título da célula */
+    font-weight: bold;
+    margin-right: 1rem;
+    color: var(--cor-texto-principal);
+  }
+  .acoes-cell {
+    flex-direction: row;
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+    justify-content: flex-start;
+  }
+  .acoes-cell::before {
+    display: none; /* Não precisa de label para a célula de ações */
+  }
+  /* Adicione os data-label no seu componente React (PaginaConsulta.js) */
+  /* Ex: <td data-label="Código">{vale.codigo}</td> */
 }
 
 @media (max-width: 480px) {
   .card { padding: 1rem; }
+  .btn { width: 100%; } /* Botões ocupam largura total para facilitar o toque */
+  .acoes-cell .btn { width: auto; } /* Exceto os botões de ação na tabela */
 }
-

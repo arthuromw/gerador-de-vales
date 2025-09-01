@@ -1,113 +1,139 @@
 /* src/pages/PaginaFechamentoDia.css */
 
 .fechamento-container { 
-  padding: 20px; 
+  padding: 1rem; /* Reduzido para melhor visualização em telas menores */
   font-family: Arial, sans-serif; 
 }
 .relatorio-box { 
   background-color: #fff; 
-  padding: 30px; 
-  border-radius: 8px; 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+  padding: 1.5rem; /* Ajustado para ser consistente */
+  border-radius: var(--raio-borda, 8px); 
+  box-shadow: var(--sombra-card, 0 4px 10px rgba(0,0,0,0.1)); 
   max-width: 900px; 
   margin: 0 auto; 
 }
 .relatorio-header { 
   text-align: center; 
-  border-bottom: 1px solid #eee; 
-  padding-bottom: 20px; 
-  margin-bottom: 20px; 
+  border-bottom: 1px solid var(--cor-borda, #eee); 
+  padding-bottom: 1.5rem; 
+  margin-bottom: 1.5rem; 
 }
 .relatorio-header h2 { 
   margin: 0; 
-  color: #1e3a5f; 
+  color: var(--cor-secundaria, #1e3a5f); 
+  font-size: 1.75rem;
 }
 .relatorio-header p { 
   margin: 5px 0 0; 
   font-size: 1.1rem; 
-  color: #555; 
+  color: var(--cor-texto-secundario, #555); 
 }
 
 .summary-box { 
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: space-around; 
-  gap: 20px; 
+  display: grid; /* MUDANÇA: Usando grid para melhor controle */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem; 
   background-color: #f8f9fa; 
-  padding: 20px; 
-  border-radius: 8px; 
-  margin-bottom: 30px; 
+  padding: 1.5rem; 
+  border-radius: var(--raio-borda, 8px); 
+  margin-bottom: 2rem; 
 }
 .summary-item { 
-  text-align: center; 
-  flex: 1; 
-  min-width: 150px;
+  text-align: center;
 }
 .summary-item span { 
+  display: block;
   font-size: 0.9rem; 
-  color: #667085; 
+  color: #667085;
+  margin-bottom: 0.25rem;
 }
 .summary-item strong { 
   display: block; 
-  font-size: 1.8rem; 
+  font-size: clamp(1.5rem, 4vw, 2rem); /* Tipografia fluida */
   font-weight: 700; 
-  color: #1e3a5f; 
+  color: var(--cor-secundaria, #1e3a5f); 
 }
 .summary-item.valor strong { 
-  color: #28a745; 
+  color: var(--cor-sucesso, #28a745); 
 }
 
 .relatorio-box h3 { 
-  color: #005a9c; 
-  border-bottom: 2px solid #005a9c; 
-  padding-bottom: 5px; 
-  margin-bottom: 20px; 
+  color: var(--cor-primaria, #005a9c); 
+  border-bottom: 2px solid var(--cor-primaria, #005a9c); 
+  padding-bottom: 0.5rem; 
+  margin-bottom: 1.5rem; 
+  font-size: 1.25rem;
 }
 
 .botoes-acao { 
   text-align: center; 
-  margin-top: 20px; 
+  margin-top: 2rem; 
 }
-.botoes-acao button { 
-  width: auto; 
-  padding: 12px 30px; 
-  font-size: 1.1rem; 
-  background-color: #007bff; 
-}
-.botoes-acao button:hover { 
-  background-color: #0056b3; 
+/* Usando o sistema de botões global */
+.botoes-acao .btn {
+  font-size: 1.1rem;
+  padding: 12px 30px;
 }
 
-/* --- Media Query para Telas Pequenas --- */
-@media (max-width: 600px) {
-  .summary-box {
-    flex-direction: column;
-    align-items: center;
+/* MELHORIA: A tabela aqui também deve ser responsiva */
+/* O seletor global de App.css já deve cobrir, mas é bom garantir */
+@media (max-width: 768px) {
+  .relatorio-box table thead {
+    display: none;
   }
-  .relatorio-box {
-    padding: 15px;
+  .relatorio-box table, .relatorio-box table tbody, .relatorio-box table tr, .relatorio-box table td {
+    display: block;
+    width: 100%;
+  }
+  .relatorio-box table tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    padding: 1rem;
+  }
+  .relatorio-box table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border: none;
+    white-space: normal;
+  }
+  .relatorio-box table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 1rem;
   }
 }
 
 /* --- Media Query para Impressão --- */
 @media print {
   body { 
-    background-color: #fff; 
+    background-color: #fff;
+    font-size: 12pt;
   }
-  .fechamento-container { 
+  .fechamento-container, .relatorio-box { 
     padding: 0; 
   }
-  .App-header, .botoes-acao { 
-    display: none; 
+  .App-header, .sidebar, .botoes-acao { 
+    display: none !important; /* !important para garantir */
   }
   .relatorio-box { 
     box-shadow: none; 
-    border: 1px solid #ccc; 
+    border: none;
     width: 100%;
     max-width: 100%;
-    padding: 10px;
   }
-  tr { 
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  tr, .summary-item { 
     page-break-inside: avoid; 
+  }
+  .summary-box {
+    background-color: #f0f0f0 !important; /* A impressão pode remover cores de fundo */
+    -webkit-print-color-adjust: exact; /* Força a impressão de cores de fundo */
+    print-color-adjust: exact;
   }
 }

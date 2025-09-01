@@ -11,8 +11,8 @@
 .dashboard-stats {
   width: 100%;
   display: grid;
-  /* Cria colunas flexíveis com um tamanho mínimo, permitindo que se ajustem */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* CORREÇÃO: O valor mínimo agora é menor, ideal para telas de celular */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1.5rem;
 }
 
@@ -55,7 +55,7 @@
 /* === SEÇÃO DE NAVEGAÇÃO RÁPIDA (BOTÕES) === */
 .main-nav {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
   width: 100%;
 }
@@ -71,6 +71,10 @@
   text-align: center;
   transition: var(--transicao-rapida);
   box-shadow: var(--sombra-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px; /* Garante altura mínima consistente */
 }
 
 .nav-button:hover {

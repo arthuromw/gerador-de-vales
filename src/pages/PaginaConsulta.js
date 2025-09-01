@@ -51,13 +51,13 @@ const PaginaConsulta = ({ vales, onConfirmarPagamento, onDeletarVale }) => {
               <thead><tr><th>Código</th><th>Data</th><th>Beneficiário</th><th>Status</th><th>Valor</th><th>Ações</th></tr></thead>
               <tbody>
                 {valesPaginados.map(vale => (
-                  <tr key={vale.idVale}>
-                    <td>{vale.codigo}</td>
-                    <td>{formatarData(vale.data)}</td>
-                    <td>{vale.nome}</td>
-                    <td><span className={`status status-${vale.status}`}>{vale.status}</span></td>
-                    <td>{formatarValor(vale.valor)}</td>
-                    <td className="acoes-cell">
+<tr key={vale.idVale}>
+  <td data-label="Código">{vale.codigo}</td>
+  <td data-label="Data">{formatarData(vale.data)}</td>
+  <td data-label="Beneficiário">{vale.nome}</td>
+  <td data-label="Status"><span className={`status status-${vale.status}`}>{vale.status}</span></td>
+  <td data-label="Valor">{formatarValor(vale.valor)}</td>
+  <td className="acoes-cell">
                       <Link className="btn btn-secondary btn-sm" to={`/vale/${vale.idVale}?via=cliente`} target="_blank" rel="noopener noreferrer">Cliente</Link>
                       <Link className="btn btn-secondary btn-sm" to={`/vale/${vale.idVale}?via=controle`} target="_blank" rel="noopener noreferrer">Controle</Link>
                       <Link className="btn btn-warning btn-sm" to={`/editar-vale/${vale.idVale}`}>Editar</Link>
