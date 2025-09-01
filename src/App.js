@@ -11,7 +11,7 @@ import PaginaGerarVale from './pages/PaginaGerarVale';
 import PaginaConsulta from './pages/PaginaConsulta';
 import PaginaFechamentoDia from './pages/PaginaFechamentoDia';
 import PaginaEditarVale from './pages/PaginaEditarVale';
-import ValeImpressao from './pages/ValeImpressao';
+import ValeImpressao from './pages/ValeImpressao'; 
 
 import './App.css';
 
