@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Componentes e Páginas
+// Compon entes e Páginas
 import Header from './components/Header';
 import Home from './pages/Home';
 import PaginaCadastro from './pages/PaginaCadastro';
