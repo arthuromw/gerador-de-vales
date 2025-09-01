@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 
-// Compon entes e Páginas
-import Header from './components/Header';
+// Componentes e Páginas
+import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import PaginaCadastro from './pages/PaginaCadastro';
 import PaginaGerarVale from './pages/PaginaGerarVale';
@@ -50,13 +51,10 @@ function App() {
   const dashboardStats = useMemo(() => {
     const hoje = new Date().toISOString().slice(0, 10);
     const mesAnoAtual = hoje.slice(0, 7);
-    
     const valesHoje = vales.filter(v => v.data === hoje);
     const valesMes = vales.filter(v => v.data.startsWith(mesAnoAtual));
-    
     const totalValorHoje = valesHoje.reduce((acc, v) => acc + parseFloat(v.valor), 0);
     const totalValorMes = valesMes.reduce((acc, v) => acc + parseFloat(v.valor), 0);
-    
     return {
       valesGeradosHoje: valesHoje.length,
       valesGeradosMes: valesMes.length,
@@ -71,67 +69,63 @@ function App() {
 
   const handleAdicionarPessoa = (novaPessoa) => {
     setPessoas(prev => [...prev, novaPessoa]);
-    alert(`Pessoa "${novaPessoa.nome}" cadastrada com sucesso!`);
+    toast.success(`Pessoa "${novaPessoa.nome}" cadastrada!`);
   };
 
   const handleGerarVale = (dadosDoVale) => {
     const novoContador = contadorVales + 1;
     const ano = new Date().getFullYear().toString().slice(-2);
     const codigoUnico = `VALE-${ano}-${String(novoContador).padStart(5, '0')}`;
-    const novoVale = { 
-      ...dadosDoVale, 
-      codigo: codigoUnico, 
-      status: 'pendente',
-      observacoes: dadosDoVale.observacoes || '' // Garante que o campo exista
-    };
+    const novoVale = { ...dadosDoVale, codigo: codigoUnico, status: 'pendente', observacoes: dadosDoVale.observacoes || '' };
     setVales(prevVales => [...prevVales, novoVale]);
     setContadorVales(novoContador);
+    toast.success(`Vale ${codigoUnico} gerado com sucesso!`);
   };
 
   const handleConfirmarPagamento = (idVale) => {
     setVales(vales.map(vale => vale.idVale === idVale ? { ...vale, status: 'pago' } : vale));
+    toast.success('Vale marcado como pago!');
   };
 
   const handleDeletarVale = (idVale) => {
     if (window.confirm("Tem certeza que deseja deletar este vale? Esta ação não pode ser desfeita.")) {
       setVales(vales.filter(vale => vale.idVale !== idVale));
+      toast.success('Vale deletado com sucesso.');
     }
   };
   
   const handleDeletarTodosOsVales = () => {
-    if (window.confirm("ATENÇÃO!\n\nVocê está prestes a deletar TODOS os vales gerados.\nEsta ação não pode ser desfeita.\n\nDeseja continuar?")) {
-      if (window.confirm("CONFIRMAÇÃO FINAL:\n\nDeletar todos os vales permanentemente do armazenamento?")) {
-        localStorage.removeItem('valesGerados');
-        localStorage.removeItem('contadorVales');
-        setVales([]);
-        setContadorVales(0);
-        alert("Todos os dados de vales foram deletados com sucesso.");
-      }
+    if (window.confirm("ATENÇÃO!\n\nDeletar TODOS os vales permanentemente do armazenamento?")) {
+      localStorage.removeItem('valesGerados');
+      localStorage.removeItem('contadorVales');
+      setVales([]);
+      setContadorVales(0);
+      toast.success("Todos os vales foram deletados com sucesso.");
     }
   };
 
   const handleEditarVale = (idVale, dadosAtualizados) => {
-    setVales(vales.map(vale => 
-      vale.idVale === idVale 
-        ? { ...vale, ...dadosAtualizados } 
-        : vale
-    ));
+    setVales(vales.map(vale => vale.idVale === idVale ? { ...vale, ...dadosAtualizados } : vale));
+    toast.success('Vale atualizado com sucesso!');
   };
 
   return (
-    <div className="App">
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home stats={dashboardStats} />} />
-          <Route path="/cadastrar" element={<PaginaCadastro pessoas={pessoas} onAdicionarPessoa={handleAdicionarPessoa} />} />
-          <Route path="/gerar" element={<PaginaGerarVale pessoas={pessoas} vales={vales} onGerarVale={handleGerarVale} />} />
-          <Route path="/consultar" element={<PaginaConsulta vales={vales} onConfirmarPagamento={handleConfirmarPagamento} onDeletarVale={handleDeletarVale} onDeletarTodos={handleDeletarTodosOsVales} />} />
-          <Route path="/fechamento-dia" element={<PaginaFechamentoDia vales={vales} />} />
-          <Route path="/editar-vale/:idVale" element={<PaginaEditarVale vales={vales} onEditarVale={handleEditarVale} />} />
-          <Route path="/vale/:idVale" element={<ValeImpressao />} />
-        </Routes>
-      </main>
+    <div className="App-container">
+      <Toaster position="top-right" reverseOrder={false} />
+      <Sidebar />
+      <div className="content-wrap">
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home stats={dashboardStats} />} />
+            <Route path="/cadastrar" element={<PaginaCadastro pessoas={pessoas} onAdicionarPessoa={handleAdicionarPessoa} />} />
+            <Route path="/gerar" element={<PaginaGerarVale pessoas={pessoas} vales={vales} onGerarVale={handleGerarVale} />} />
+            <Route path="/consultar" element={<PaginaConsulta vales={vales} onConfirmarPagamento={handleConfirmarPagamento} onDeletarVale={handleDeletarVale} onDeletarTodos={handleDeletarTodosOsVales} />} />
+            <Route path="/fechamento-dia" element={<PaginaFechamentoDia vales={vales} />} />
+            <Route path="/editar-vale/:idVale" element={<PaginaEditarVale vales={vales} onEditarVale={handleEditarVale} />} />
+            <Route path="/vale/:idVale" element={<ValeImpressao />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   );
 }
