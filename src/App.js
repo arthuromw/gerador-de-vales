@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 
 // Componentes e Páginas
-import Header from './components/Header';
+import Header from './components/header';
 import SideBar from './components/SideBar'; // Nome do arquivo atualizado
 import Home from './pages/Home';
 import PaginaCadastro from './pages/PaginaCadastro';
